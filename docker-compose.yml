@@ -1,0 +1,27 @@
+services:
+  pi-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pi-web:latest
+    container_name: pi-web
+    ports:
+      - "30141:30141"
+    environment:
+      # Make the container's HOME identical to the host's, so os.homedir(),
+      # `~/.pi`, and `~/pi-cwd-*` all resolve to the same paths the session
+      # files were recorded with.
+      HOME: ${HOME}
+      # Never try to open a browser from inside the container.
+      PI_WEB_NO_OPEN: "1"
+    volumes:
+      # pi data (sessions, auth, models.json, skills) at the SAME path as host.
+      - ${HOME}/.pi:${HOME}/.pi
+      # ---- Project directories, mounted at their IDENTICAL absolute path ----
+      # This is what lets the agent open and EDIT files from existing sessions.
+      # The container path MUST equal the host path (the cwd stored in the
+      # session .jsonl files). Add one line per project you work on.
+      - /Volumes/Life/others:/Volumes/Life/others
+      - /Volumes/Life/projects:/Volumes/Life/projects
+      # - /Users/lhystella/code/another-project:/Users/lhystella/code/another-project
+    restart: unless-stopped

@@ -10,8 +10,9 @@ export async function GET() {
   );
   const providers = modelRuntime.getProviders().filter((provider) => provider.auth.oauth);
 
-  const EXCLUDED = new Set(["anthropic"]);
+  const EXCLUDED = new Set<string>();
   const DISPLAY_NAMES: Record<string, string> = {
+    "anthropic": "Claude Pro/Max",
     "openai-codex": "ChatGPT Plus/Pro",
     "github-copilot": "GitHub Copilot",
   };
