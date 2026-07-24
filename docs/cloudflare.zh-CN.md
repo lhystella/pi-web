@@ -209,12 +209,25 @@ curl -I https://pi.example.com/api/sessions
 
 通常会看到重定向到 Cloudflare Access，而不是直接返回应用内容。
 
-## 9. iPhone 和其他电脑
+## 9. 安装到 iPhone 或 iPad 主屏幕
 
-1. 在 Safari 或其他浏览器打开 <https://pi.example.com>。
+部署包含 PWA Manifest 的新版本后：
+
+1. 必须先用 **Safari** 打开 <https://pi.example.com>。
 2. 输入白名单邮箱，完成验证码或 Identity Provider 登录。
-3. 登录后可在 iOS Safari 中选择 **分享 → 添加到主屏幕**。
-4. Access session 到期后需要重新登录，这是正常行为。
+3. 点击 Safari 的 **分享** 按钮。
+4. 选择 **添加到主屏幕**；如果系统显示 **Open as Web App / 作为网页 App
+   打开**，保持开启。
+5. 名称保留为 `Pi Agent`，点击 **添加**。
+6. 从主屏幕图标启动。应用会使用独立窗口，不显示 Safari 地址栏。
+
+如果之前已经添加过旧图标，请先从主屏幕删除，再重新添加，以刷新 Manifest、
+图标和独立窗口设置。独立 App 第一次启动时可能要求再次完成 Cloudflare Access
+登录；Access session 到期后也需要重新登录，这是正常行为。
+
+iOS 不允许网页按钮直接弹出系统安装界面，因此仍需手动使用“分享 → 添加到主
+屏幕”。本项目没有缓存会话、API 或 Agent 事件，也不提供离线运行；Mac、Docker
+和 Tunnel 必须在线。
 
 如果 iOS 反复跳回登录页，先关闭内容拦截器，允许 Cookie，并确认系统时间为
 自动设置，然后重新使用 Safari 登录。

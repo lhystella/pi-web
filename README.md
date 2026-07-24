@@ -45,6 +45,7 @@ PI_WEB_NO_OPEN=1 pi-web         # useful when running as a background service
 - **Chat beside the project**: browse files on the left and preview source, docs, images, audio, and PDFs on the right while the agent works.
 - **See session state clearly**: context usage, cost, compaction state, and system prompt details are visible from the top bar.
 - **Configure less from the terminal**: manage models, login/API keys, model tests, and skill switches from the web UI.
+- **Install on mobile**: add the HTTPS site to an iPhone or iPad Home Screen and launch it in a standalone app window.
 
 ## Notes
 
