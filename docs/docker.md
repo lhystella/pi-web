@@ -10,10 +10,13 @@ runs the pi agent **in-process**, so the container needs access to:
 ## Quick start (docker compose)
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
-Then open <http://localhost:30141>.
+Then open <http://localhost:30141>. The host port is bound to `127.0.0.1`, so it
+is not directly reachable from the LAN or Internet. For authenticated remote
+access through `https://pi.example.com`, follow the
+[Cloudflare Access and Tunnel guide](./cloudflare.zh-CN.md).
 
 `docker-compose.yml` mounts everything at **identical absolute paths** and sets
 the container `HOME` to match the host, which is what makes editing files from
@@ -68,7 +71,7 @@ through the bind mount to the real files on your host.
 docker build -t pi-web:latest .
 
 docker run -d --name pi-web \
-  -p 30141:30141 \
+  -p 127.0.0.1:30141:30141 \
   -e HOME="$HOME" \
   -e PI_WEB_NO_OPEN=1 \
   -v "$HOME/.pi:$HOME/.pi" \
@@ -78,14 +81,15 @@ docker run -d --name pi-web \
 
 ## Environment variables
 
-| Variable                | Purpose                                                    |
-| ----------------------- | ---------------------------------------------------------- |
-| `HOME`                  | Set to the host `HOME` so `~/.pi` and cwds resolve the same |
-| `PI_CODING_AGENT_DIR`   | Override the pi agent dir (defaults to `$HOME/.pi/agent`)   |
-| `PORT`                  | Listen port (default `30141`)                              |
-| `PI_WEB_NO_OPEN`        | Set to `1` — never try to open a browser in-container       |
+| Variable              | Purpose                                                    |
+| --------------------- | ---------------------------------------------------------- |
+| `HOME`                | Set to the host `HOME` so `~/.pi` and cwds resolve the same |
+| `PI_CODING_AGENT_DIR` | Override the pi agent dir (defaults to `$HOME/.pi/agent`)   |
+| `PORT`                | Listen port (default `30141`)                               |
+| `PI_WEB_NO_OPEN`      | Set to `1` — never try to open a browser in-container       |
 
-The container always binds to `0.0.0.0` so the UI is reachable on the mapped port.
+The app binds to `0.0.0.0` inside the container so the `cloudflared` container
+can reach it. Compose publishes that port only on host loopback (`127.0.0.1`).
 
 ## Notes
 
@@ -98,4 +102,6 @@ The container always binds to `0.0.0.0` so the UI is reachable on the mapped por
 - The image runs as root so mounted host files stay writable. If you prefer a
   non-root user, add one in the `Dockerfile` and make sure file ownership on the
   mounts lines up.
-```
+- Do not forward port `30141` on the router. pi-web can execute tools and edit
+  mounted files; remote access should go through an authentication layer such
+  as Cloudflare Access.

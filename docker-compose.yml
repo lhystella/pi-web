@@ -6,7 +6,9 @@ services:
     image: pi-web:latest
     container_name: pi-web
     ports:
-      - "30141:30141"
+      # Keep the origin private. Remote traffic must enter through Cloudflare
+      # Tunnel; localhost remains available for maintenance on this machine.
+      - "127.0.0.1:30141:30141"
     environment:
       # Make the container's HOME identical to the host's, so os.homedir(),
       # `~/.pi`, and `~/pi-cwd-*` all resolve to the same paths the session
